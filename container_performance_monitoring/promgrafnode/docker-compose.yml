@@ -25,10 +25,10 @@ services:
       - monitoring 
   prometheus: 
     image: prom/prometheus:latest 
-    user: "1000" 
+    user: "1001" 
     environment: 
-      - PUID=1000 
-      - PGID=1000 
+      - PUID=1001 
+      - PGID=1001 
     container_name: prometheus 
     restart: unless-stopped 
     cpuset: "4-5"
@@ -47,7 +47,7 @@ services:
       - monitoring 
   grafana: 
     image: grafana/grafana:latest 
-    user: "1000" 
+    user: "1001" 
     container_name: grafana 
     ports: 
       - 5435:3000 
