@@ -33,8 +33,8 @@ services:
     restart: unless-stopped 
     cpuset: "4-5"
     volumes: 
-      - /bachelor_work/container_performance_monitoring/promgrafnode/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
-      - /bachelor_work/container_performance_monitoring/promgrafnode/prometheus:/prometheus 
+      - /bachelor-work/container_performance_monitoring/promgrafnode/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
+      - /bachelor-work/container_performance_monitoring/promgrafnode/prometheus:/prometheus 
     command: 
       - '--config.file=/etc/prometheus/prometheus.yml' 
       - '--storage.tsdb.path=/prometheus' 
@@ -54,8 +54,8 @@ services:
     restart: unless-stopped 
     cpuset: "4-5"
     volumes: 
-      - /bachelor_work/container_performance_monitoring/promgrafnode/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources 
-      - /bachelor_work/container_performance_monitoring/promgrafnode/grafana:/var/lib/grafana 
+      - /bachelor-work/container_performance_monitoring/promgrafnode/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources 
+      - /bachelor-work/container_performance_monitoring/promgrafnode/grafana:/var/lib/grafana 
     networks: 
       - monitoring 
   cadvisor: 
