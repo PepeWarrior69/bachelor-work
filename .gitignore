@@ -1,0 +1,11 @@
+/node_modules
+
+/container_performance_monitoring/promgrafnode/grafana
+
+/container_performance_monitoring/promgrafnode/prometheus/*
+!/container_performance_monitoring/promgrafnode/prometheus/prometheus.yml
+
+
+/app/source_data/stocks
+/app/source_data/stocks2
+/app/source_data/stocks3

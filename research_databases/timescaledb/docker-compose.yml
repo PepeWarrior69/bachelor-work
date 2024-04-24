@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=alex
+      - POSTGRES_PASSWORD=alex123
+      - POSTGRES_DB=stock_db
+    volumes:
+      - /database/timescaledb/data:/var/lib/postgresql/data
+      - /database/timescaledb/metrics:/var/lib/postgresql/metrics
+      - /etc/localtime:/etc/localtime:ro
+    blkio_config:
+      device_read_iops:
+        - path: /dev/sda
+          rate: 100
+      device_write_iops:
+        - path: /dev/sda
+          rate: 100
+    cpuset: "0,2"
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 2GB
+        reservations:
+          memory: 1GB

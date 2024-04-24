@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:latest
+    restart: always
+    ports:
+      - "5433:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=alex
+      - DOCKER_INFLUXDB_INIT_PASSWORD=alexStockDb123
+      - DOCKER_INFLUXDB_INIT_ORG=my-stock-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=stock_db
+    volumes:
+      - /database/influxdb2/config:/etc/influxdb2
+      - /database/influxdb2/data:/var/lib/influxdb2:rw
+      - /database/influxdb2/metrics:/var/lib/influxdb2/metrics
+      - /etc/localtime:/etc/localtime:ro
+    blkio_config:
+      device_read_iops:
+        - path: /dev/sda
+          rate: 100
+      device_write_iops:
+        - path: /dev/sda
+          rate: 100
+    cpuset: "0,2"
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 2GB
+        reservations:
+          memory: 1GB

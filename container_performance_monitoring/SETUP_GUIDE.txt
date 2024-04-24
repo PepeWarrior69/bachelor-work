@@ -1,0 +1,35 @@
+Create structure:
+    - mkdir -p promgrafnode/prometheus && \ mkdir -p promgrafnode/grafana/provisioning && \ touch promgrafnode/docker-compose.yml && \ touch promgrafnode/prometheus/prometheus.yml
+
+Setup docker-compose file
+    - https://github.com/brandonleegit/OpenSourceMonitoring
+
+Get User Id
+    - id -u
+
+Set this user Id in docker-compose file for prometheus and grafana
+
+Verify volumes directories
+
+Run containers:
+    - docker-compose up -d
+
+Verify prometheus.yml file config:
+    - IP addresses
+    - PORTS
+    - Intervals
+
+Restart prometheus container:
+    - docker stop prometheus
+    - docker start prometheus
+
+Open Grafana in Browser:
+    - your IP:3000
+    - default login "admin:admin"
+
+Setup Grafana data sources:
+    - Connections => data sources => prometheus
+    - http://YOUR_IP:9090
+    - SAVE & TEST
+
+

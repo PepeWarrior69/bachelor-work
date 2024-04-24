@@ -1,0 +1,25 @@
+https://stackoverflow.com/questions/34878808/finding-docker-container-processes-from-host-point-of-view
+
+List of processes inside container (different ids compared to those which are inside docker):
+	- docker top CONTAINER_ID
+
+SAVE DOCKER STATS to a file:
+  - docker stats -a --no-stream >> mystats.txt
+
+SAVE DOCKER STATS to a file in a table format:
+  - docker stats CONTAINER_ID --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemPerc}}\t{{.MemUsage}}\t{{.BlockIO}}" >> myStatsTable.txt
+
+
+"TOP" command guide: https://linuxconfig.org/learning-linux-commands-top
+
+// INSIDE DOCKER
+
+Connect to Terminal inside Docker:
+  - docker exec -it CONTAINER_ID /bin/bash
+
+Save "top" utility output to a file:
+  - top -b > /var/lib/postgresql/metrics/top-test-metrics.txt
+  - top -d 0.1 -b > /var/lib/postgresql/metrics/top-01-metrics.txt
+
+
+// Monitoring system setup: https://medium.com/@sohammohite/docker-container-monitoring-with-cadvisor-prometheus-and-grafana-using-docker-compose-b47ec78efbc

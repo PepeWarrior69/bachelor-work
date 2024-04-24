@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  questdb:
+    image: questdb/questdb
+    restart: always
+    ports:
+      - "5434:9000"
+      - "8812:8812"
+      - "9009:9009"
+    volumes:
+      - /database/questdb/data:/var/lib/questdb
+      - /database/questdb/metrics:/var/lib/questdb/metrics
+      - /etc/localtime:/etc/localtime:ro
+    blkio_config:
+      device_read_iops:
+        - path: /dev/sda
+          rate: 100
+      device_write_iops:
+        - path: /dev/sda
+          rate: 100
+    cpuset: "0,2"
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 2GB
+        reservations:
+          memory: 1GB
