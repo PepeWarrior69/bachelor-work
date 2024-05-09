@@ -1,4 +1,4 @@
-/node_modules
+*/node_modules
 
 /container_performance_monitoring/promgrafnode/grafana
 
@@ -9,3 +9,4 @@
 /app/source_data/stocks
 /app/source_data/stocks2
 /app/source_data/stocks3
+/app/data/*

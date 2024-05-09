@@ -7,6 +7,7 @@ services:
     ports:
       - "5436:9000"
       - "8443:8443"
+      - "9123:8123"
     environment:
       - CLICKHOUSE_USER=alex
       - CLICKHOUSE_PASSWORD=alex123
