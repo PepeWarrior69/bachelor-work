@@ -10,3 +10,6 @@
 /app/source_data/stocks2
 /app/source_data/stocks3
 /app/data/*
+
+.env
+

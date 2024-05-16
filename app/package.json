@@ -10,8 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@clickhouse/client": "^1.0.1",
+    "@influxdata/influxdb-client": "^1.33.2",
+    "@questdb/nodejs-client": "^3.0.0",
     "axios": "^1.6.8",
     "csv-writer": "^1.6.0",
-    "moment-timezone": "^0.5.45"
+    "dotenv": "^16.4.5",
+    "influx": "^5.9.3",
+    "moment-timezone": "^0.5.45",
+    "pg": "^8.11.5"
   }
 }

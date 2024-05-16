@@ -36,15 +36,10 @@ const getJSONFileData = async (filePath) => {
     })
 }
 
-const main = async () => {
+const main = async (limit, dataFormatter, outputDataFilePath, dataMultiplier) => {
     console.time("totalExecutionTime")
 
     const stockMap = new Map()
-
-    const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'stocks_data.csv')
-    const TIMEZONE = 'US/Eastern'
-    const TS_FORMAT = 'YYYY-MM-DD HH:mm:ssZ'
-    const DATA_MULTIPLIER = 20
     const csvHeader = [
         { id: 'id', title: 'stock_id' },
         { id: 'ts', title: 'ts' },
@@ -52,9 +47,8 @@ const main = async () => {
         { id: 'volume', title: 'volume' }
     ]
 
-    const dataFormatter = new DataFormatter(TIMEZONE, TS_FORMAT)
     const dataWriter = new DataWriter(outputDataFilePath, csvHeader)
-    const dataComposer = new DataComposer(dataFormatter, dataWriter, DATA_MULTIPLIER)
+    const dataComposer = new DataComposer(dataFormatter, dataWriter, dataMultiplier)
 
     const sourceDataDirectories = [
         path.join(__dirname, '..', '..', 'source_data', 'stocks2'),
@@ -63,6 +57,7 @@ const main = async () => {
 
     for (let i = 0; i < sourceDataDirectories.length; i++) {
         const dir = sourceDataDirectories[i]
+        let isLimitReached = false
         
         try {
             const files = await getDirectoryFiles(dir)
@@ -88,11 +83,15 @@ const main = async () => {
 
                 console.log(`Original file (${filename}) records count = ${jsonData.data.length}`)
         
-                await dataComposer.processData(stockMap.get(stockSymbol), jsonData)
+                isLimitReached = await dataComposer.processData(stockMap.get(stockSymbol), jsonData, limit)
+
+                if (isLimitReached) break
             }
         } catch (err) {
             console.log('Error during read directory: ', err)
         }
+
+        if (isLimitReached) break
     }
 
     console.log("Saving stocks reference file...")
@@ -116,5 +115,13 @@ const main = async () => {
 }
 
 
-main()
+const timescaleDataFormatter = new DataFormatter('US/Eastern', 'YYYY-MM-DD HH:mm:ssZ')
+// https://docs.machbase.com/dbms/feature-table/tag/manipulate/input/#csv-format-datacsv
+const machbaseDataFormatter = new DataFormatter('US/Eastern', 'YYYY-MM-DD HH24:MI:SS mmm:uuu:nnn')
+
+
+const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'stocks_data.csv')
+const DATA_MULTIPLIER = 10
+
+main(30_000_000, timescaleDataFormatter, outputDataFilePath, DATA_MULTIPLIER)
 

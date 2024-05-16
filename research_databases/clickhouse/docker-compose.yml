@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   clickhouse:
-    image: clickhouse/clickhouse-server
+    image: yandex/clickhouse-server
     restart: always
     ports:
-      - "5436:9000"
+      - "8888:9000"
       - "8443:8443"
-      - "9123:8123"
+      - "8123:8123"
     environment:
       - CLICKHOUSE_USER=alex
       - CLICKHOUSE_PASSWORD=alex123
@@ -15,22 +15,20 @@ services:
       - CLICKHOUSE_DB=stock_db
     volumes:
       - /database/clickhouse/data:/var/lib/clickhouse/
-      - /database/clickhouse/logs:/var/log/clickhouse-server/
-      - /database/clickhouse/config.xml:/etc/clickhouse-server/config.xml
       - /database/clickhouse/metrics:/var/lib/clickhouse/metrics
       - /etc/localtime:/etc/localtime:ro
     blkio_config:
       device_read_iops:
         - path: /dev/sda
-          rate: 100
+          rate: 1000
       device_write_iops:
         - path: /dev/sda
-          rate: 100
-    cpuset: "0,2"
+          rate: 1000
+    cpuset: "0,1,2,3"
     deploy:
       resources:
         limits:
-          cpus: 2
-          memory: 2GB
+          cpus: 4
+          memory: 4GB
         reservations:
           memory: 1GB

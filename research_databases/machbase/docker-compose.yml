@@ -14,15 +14,15 @@ services:
     blkio_config:
       device_read_iops:
         - path: /dev/sda
-          rate: 100
+          rate: 1000
       device_write_iops:
         - path: /dev/sda
-          rate: 100
-    cpuset: "0,2"
+          rate: 1000
+    cpuset: "0,1,2,3"
     deploy:
       resources:
         limits:
-          cpus: 2
-          memory: 2GB
+          cpus: 4
+          memory: 4GB
         reservations:
           memory: 1GB

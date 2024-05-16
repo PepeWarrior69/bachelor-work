@@ -24,8 +24,10 @@ class DataComposer {
      * @param {Integer} id
      * @param {Object} json
      */
-    async processData(id, json) {
+    async processData(id, json, limit) {
         console.log("Started data processor...")
+
+        let isLimitReached = false
 
         for (let k = 0; k < json.data.length; k++) {
             const el = json.data[k]
@@ -41,10 +43,17 @@ class DataComposer {
                 await this.__addRecordToPacket(
                     this.formatter.composeRecord(id, epoch - i * 2, low, high, volume)
                 )
+
+                if (this.finalDataLength + this.tailIndex + 1 >= limit) {
+                    isLimitReached = true
+                    break
+                }
             }
         }
 
         await this.__handleWrite()
+
+        return isLimitReached
     }
 
     async __addRecordToPacket(record) {
