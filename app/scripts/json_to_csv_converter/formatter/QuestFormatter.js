@@ -2,7 +2,7 @@ const moment = require('moment-timezone')
 
 
 
-class DataFormatter {
+class QuestFormatter {
     /**
      * @param {string} timezone 
      * @param {string} timeFormat 
@@ -21,12 +21,17 @@ class DataFormatter {
      * @returns {Object} Record
      */
     composeRecord(id, epoch, low, high, volume) {
-        return {
-            id,
-            ts: moment.unix(epoch).tz(this.timezone).format(this.timeFormat),
-            value: this.__getRandomFloat(low, high),
-            volume
-        }
+        // return {
+        //     id,
+        //     ts: moment.unix(epoch).tz(this.timezone).format(this.timeFormat),
+        //     value: this.__getRandomFloat(low, high),
+        //     volume
+        // }
+
+        const ts = moment.unix(epoch).tz(this.timezone).format(this.timeFormat)
+        const val = this.__getRandomFloat(low, high)
+
+        return `${id},"${ts}",${val},${volume}`
     }
 
     __getRandomFloat(min, max) {
@@ -34,5 +39,5 @@ class DataFormatter {
     }
 }
 
-module.exports = DataFormatter
+module.exports = QuestFormatter
 

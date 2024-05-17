@@ -61,6 +61,7 @@ class TimescaleDB extends DatabaseService {
                 sum(volume) as total_volume
             from stock_data
             group by stock_id
+            order by stock_id asc
         `
 
         const res = await this.execute(query)

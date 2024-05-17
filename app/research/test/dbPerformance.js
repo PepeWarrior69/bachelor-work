@@ -13,7 +13,7 @@ const TimescaleDB = require('../databaseService/TimescaleDB')
  * @param {DatabaseService} database 
  */
 const main = async (database, payload) => {
-    // await database.insert(payload)
+    await database.insert(payload)
     console.log('------------------------------------------------------');
     await database.selectionWithAggregation()
 }
@@ -46,11 +46,11 @@ const main = async (database, payload) => {
 //     { stock_id: 1, ts: 1715868263, value: 545.3333, volume: 12 },
 // ]
 
-const influx = new InfluxDB()
-const payloadInflux = [
-    { stock_id: 1, ts: 1715867263, value: 525.3333, volume: 12 },
-    { stock_id: 1, ts: 1715866263, value: 535.3333, volume: 1267 },
-    { stock_id: 1, ts: 1715868263, value: 545.3333, volume: 12 },
-]
+// const influx = new InfluxDB()
+// const payloadInflux = [
+//     { stock_id: '1', ts: 1715867263, value: 525.3443, volume: 12 },
+//     { stock_id: '1', ts: 1715866263, value: 535.6633, volume: 1267 },
+//     { stock_id: '1', ts: 1715868263, value: 545.9933, volume: 12 },
+// ]
 
 main(influx, payloadInflux)

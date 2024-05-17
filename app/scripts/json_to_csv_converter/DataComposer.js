@@ -1,12 +1,11 @@
-const DataFormatter = require('./DataFormatter')
-const DataWriter = require('./DataWriter')
+const DataWriter = require('./writers/DataWriter')
 
 const PACKET_LIMIT = 100_000
 const MAX_ATTEMPTS_COUNT = 3
 
 class DataComposer {
     /**
-     * @param {DataFormatter} formatter 
+     * @param {object} formatter 
      * @param {DataWriter} writer 
      * @param {Integer} dataMultiplier 
      */
@@ -48,6 +47,10 @@ class DataComposer {
                     isLimitReached = true
                     break
                 }
+            }
+
+            if (isLimitReached) {
+                break
             }
         }
 

@@ -1,54 +1,23 @@
 const fs = require('fs')
 const path = require('path')
 
+const { getDirectoryFiles, getJSONFileData } = require('../utils/file.utils')
 
 const DataComposer = require('./DataComposer')
-const DataFormatter = require('./DataFormatter')
-const DataWriter = require('./DataWriter')
+const DataWriter = require('./writers/DataWriter')
+
+const TimescaleFormatter = require('./formatter/TimescaleFormatter')
+const MachbaseFormatter = require('./formatter/MachbaseFormatter')
+const ClickHouseFormatter = require('./formatter/ClickHouseFormatter')
+const QuestFormatter = require('./formatter/QuestFormatter')
+const NodeDataWriter = require('./writers/NodeDataWriter')
 
 
 
-const getDirectoryFiles = (directoryPath) => {
-    return new Promise((resolve, reject) => {
-        fs.readdir(directoryPath, async (err, files) => {
-            if (err) {
-                console.log(`Error occured during file system reading (${directoryPath}): err = `, err)
-    
-                reject(err)
-            }
-    
-            resolve(files)
-        })
-    })
-}
-
-const getJSONFileData = async (filePath) => {
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error(`Error reading the JSON file (${filePath}):`, err)
-            
-                reject(err)
-            }
-    
-            resolve(JSON.parse(data))
-        })
-    })
-}
-
-const main = async (limit, dataFormatter, outputDataFilePath, dataMultiplier) => {
+const main = async (limit, dataComposer) => {
     console.time("totalExecutionTime")
 
     const stockMap = new Map()
-    const csvHeader = [
-        { id: 'id', title: 'stock_id' },
-        { id: 'ts', title: 'ts' },
-        { id: 'value', title: 'value' },
-        { id: 'volume', title: 'volume' }
-    ]
-
-    const dataWriter = new DataWriter(outputDataFilePath, csvHeader)
-    const dataComposer = new DataComposer(dataFormatter, dataWriter, dataMultiplier)
 
     const sourceDataDirectories = [
         path.join(__dirname, '..', '..', 'source_data', 'stocks2'),
@@ -96,7 +65,7 @@ const main = async (limit, dataFormatter, outputDataFilePath, dataMultiplier) =>
 
     console.log("Saving stocks reference file...")
 
-    const outputStockIdFilePath = path.join(__dirname, '..', '..', 'data', 'stocks.csv')
+    const outputStockIdFilePath = path.join(__dirname, '..', '..', 'data', '__stocks.csv')
     const stockIdHeader = [
         { id: 'id', title: 'id' },
         { id: 'symbol', title: 'symbol' }
@@ -115,13 +84,33 @@ const main = async (limit, dataFormatter, outputDataFilePath, dataMultiplier) =>
 }
 
 
-const timescaleDataFormatter = new DataFormatter('US/Eastern', 'YYYY-MM-DD HH:mm:ssZ')
+const DATA_MULTIPLIER = 5
+const csvHeader = [
+    { id: 'id', title: 'stock_id' },
+    { id: 'ts', title: 'ts' },
+    { id: 'value', title: 'value' },
+    { id: 'volume', title: 'volume' }
+]
+
+const timescaleDataFormatter = new TimescaleFormatter('US/Eastern', 'YYYY-MM-DD HH:mm:ssZ')
 // https://docs.machbase.com/dbms/feature-table/tag/manipulate/input/#csv-format-datacsv
-const machbaseDataFormatter = new DataFormatter('US/Eastern', 'YYYY-MM-DD HH24:MI:SS mmm:uuu:nnn')
+const machbaseDataFormatter = new MachbaseFormatter('US/Eastern', '')
+const clickhouseDataFormatter = new ClickHouseFormatter('US/Eastern', 'YYYY-MM-DD HH:mm:ss')
+const questDataFormatter = new QuestFormatter('US/Eastern', 'YYYY-MM-DDTHH:mm:ss.000000Z')
 
 
-const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'stocks_data.csv')
-const DATA_MULTIPLIER = 10
+const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'TIMESCALE_stocks_data.csv')
 
-main(30_000_000, timescaleDataFormatter, outputDataFilePath, DATA_MULTIPLIER)
+
+// Timescale 
+const dataWriter = new DataWriter(outputDataFilePath, csvHeader)
+
+// ClickHouse | QuestDB
+const nodeDataWriter = new NodeDataWriter(outputDataFilePath, csvHeader)
+
+
+
+const dataComposer = new DataComposer(timescaleDataFormatter, dataWriter, DATA_MULTIPLIER)
+
+main(30_000_000, dataComposer)
 

@@ -51,6 +51,7 @@ class ClickHouse extends DatabaseService {
                 sum(volume) as total_volume
             from stock_data
             group by stock_id
+            order by stock_id asc
         `
 
         console.time('query_execution_time')

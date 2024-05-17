@@ -59,6 +59,7 @@ class QuestDB extends DatabaseService {
                 sum(volume) as total_volume
             from stock_data
             group by stock_id
+            order by stock_id asc
         `
 
         const url = `http://${process.env.DB_HOST}:${process.env.QUEST_PORT}/exec?query=${encodeURIComponent(query)}`

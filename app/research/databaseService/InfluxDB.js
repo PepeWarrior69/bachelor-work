@@ -25,25 +25,6 @@ class InfluxDB extends DatabaseService {
     }
 
     /**
-     * @param {string} query 
-    */
-    async execute(query=null) {
-        try {
-            await this.__client.connect()
-
-            console.time('query_execution_time')
-            const res = await this.__client.flush()
-            console.timeEnd('query_execution_time')
-
-            return res
-        } catch (err) {
-            console.log('Error during query execution for QuestDB: err = ', err)
-        } finally {
-            await this.__client.close()
-        }
-    }
-
-    /**
      * @param {Array<object>} data 
      */
     async insert(data) {
@@ -67,14 +48,58 @@ class InfluxDB extends DatabaseService {
 
     async selectionWithAggregation() {
         const query = `
-            from(bucket: "stock_db")
-            |> range(start: -10m)
-            |> filter(fn: (r) => e._measurement == "stock_data")
+            // Base data
+            baseData = from(bucket: "stock_db")
+            |> range(start: -7y)
+            |> filter(fn: (r) => r._measurement == "stock_data")
+            
+            // Calculate min value
+            minVal = baseData
+            |> filter(fn: (r) => r._field == "value")
+            |> group(columns: ["stock_id"])
+            |> min()
+            |> rename(columns: {_value: "min_val"})
+            
+            // Calculate max value
+            maxVal = baseData
+            |> filter(fn: (r) => r._field == "value")
+            |> group(columns: ["stock_id"])
+            |> max()
+            |> rename(columns: {_value: "max_val"})
+            
+            // Calculate avg value
+            avgVal = baseData
+            |> filter(fn: (r) => r._field == "value")
+            |> group(columns: ["stock_id"])
             |> mean()
+            |> rename(columns: {_value: "avg_val"})
+            
+            // Calculate total volume
+            totalVolume = baseData
+            |> filter(fn: (r) => r._field == "volume")
+            |> group(columns: ["stock_id"])
+            |> sum()
+            |> rename(columns: {_value: "total_volume"})
+            
+            // Join min and max values
+            minMaxJoin = join(tables: {minVal: minVal, maxVal: maxVal}, on: ["stock_id"])
+            
+            // Join with avg values
+            minMaxAvgJoin = join(tables: {minMaxJoin: minMaxJoin, avgVal: avgVal}, on: ["stock_id"])
+            
+            // Join with total volume
+            finalResult = join(tables: {minMaxAvgJoin: minMaxAvgJoin, totalVolume: totalVolume}, on: ["stock_id"])
+            
+            // Keep necessary columns
+            finalResult
+            |> keep(columns: ["stock_id", "min_val", "max_val", "avg_val", "total_volume"])
+            |> sort(columns: ["stock_id"])
         `
 
+        console.time('query_execution_time')
         this.__queryClient.queryRows(query, {
             next: (row, tableMeta) => {
+                console.timeEnd('query_execution_time')
                 const tableObject = tableMeta.toObject(row)
                 console.log('row = ', row)
                 console.log('tableObject = ', tableObject)

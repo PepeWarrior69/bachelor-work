@@ -6,6 +6,7 @@ services:
     restart: always
     ports:
       - "5435:5654"
+      - "5656:5656"
     volumes:
       - /database/machbase/data:/data
       - /database/machbase/file:/file

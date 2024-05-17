@@ -1,3 +1,7 @@
+const fs = require("fs")
+const path = require("path")
+const { parse } = require("csv-parse")
+
 
 const DatabaseService = require('.')
 
@@ -9,6 +13,36 @@ class Machbase extends DatabaseService {
     // https://docs.machbase.com/neo/api-http/http-js/
     constructor() {
         super()
+    }
+
+    async importCSV() {
+        const filePath = path.join(__dirname, '..', '..', 'data', 'MACHBASE_stocks_data.csv')
+        let payload = ''
+
+        fs.createReadStream(filePath)
+            .pipe(parse({ delimiter: ",", from_line: 2, skip_empty_lines: true }))
+            .on('data', (row) => {
+                // console.log('payload = ', payload);
+                payload += row + '\n'
+            })
+            .on('error', (err) => {
+                console.log('err = ', err)
+            })
+            .on('end', async () => {
+                console.log('finished')
+
+                const res = await fetch(`http://${process.env.DB_HOST}:${process.env.MACHBASE_PORT}/db/write/stock_data?method=insert`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type':'text/csv'
+                    },
+                    body: JSON.stringify(payload)
+                })
+
+                const r = await res.json()
+
+                console.log('res = ', r);
+            })
     }
 
     /**
@@ -51,6 +85,7 @@ class Machbase extends DatabaseService {
                 sum(volume) as total_volume
             from stock_data
             group by stock_id
+            order by stock_id asc
         `
 
         const url = `http://${process.env.DB_HOST}:${process.env.MACHBASE_PORT}/db/query?timeformat=s&q=${query}`
