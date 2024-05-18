@@ -11,6 +11,8 @@ const MachbaseFormatter = require('./formatter/MachbaseFormatter')
 const ClickHouseFormatter = require('./formatter/ClickHouseFormatter')
 const QuestFormatter = require('./formatter/QuestFormatter')
 const NodeDataWriter = require('./writers/NodeDataWriter')
+const InfluxFormatter = require('./formatter/InfluxFormatter')
+const InfluxDataSender = require('./writers/InfluxDataSender')
 
 
 
@@ -98,8 +100,10 @@ const machbaseDataFormatter = new MachbaseFormatter('US/Eastern', '')
 const clickhouseDataFormatter = new ClickHouseFormatter('US/Eastern', 'YYYY-MM-DD HH:mm:ss')
 const questDataFormatter = new QuestFormatter('US/Eastern', 'YYYY-MM-DDTHH:mm:ss.000000Z')
 
+const influxDataFormatter = new InfluxFormatter('US/Eastern', 'YYYY-MM-DDTHH:mm:ss')
 
-const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'MACHBASE_stocks_data.csv')
+
+const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'INFLUX_VOLUME_stocks_data.csv')
 
 
 // Timescale | Machbase?
@@ -108,9 +112,13 @@ const dataWriter = new DataWriter(outputDataFilePath, csvHeader)
 // ClickHouse | QuestDB
 const nodeDataWriter = new NodeDataWriter(outputDataFilePath, csvHeader)
 
+// InfluxDB - have issues with CSV/LINE data import
+// even influx CLI trying to load whole CSV file into RAM and only then write data to db. Ofc It's easily exceeding RAM and throwing error...
+const influxDataSender = new InfluxDataSender(outputDataFilePath, csvHeader)
 
 
-const dataComposer = new DataComposer(machbaseDataFormatter, dataWriter, DATA_MULTIPLIER)
 
-main(100_000_000, dataComposer)
+const dataComposer = new DataComposer(influxDataFormatter, influxDataSender, DATA_MULTIPLIER)
+
+// main(100_000_000, dataComposer)
 

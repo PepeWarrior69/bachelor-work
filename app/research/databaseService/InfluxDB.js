@@ -42,7 +42,7 @@ class InfluxDB extends DatabaseService {
         const res = await this.__writeClient.flush()
         console.timeEnd('query_execution_time')
 
-        console.log('InfluxDB response = ', res);
+        // console.log('InfluxDB response = ', res);
     }
     
 
