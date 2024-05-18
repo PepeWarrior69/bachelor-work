@@ -84,7 +84,7 @@ const main = async (limit, dataComposer) => {
 }
 
 
-const DATA_MULTIPLIER = 5
+const DATA_MULTIPLIER = 10
 const csvHeader = [
     { id: 'id', title: 'stock_id' },
     { id: 'ts', title: 'ts' },
@@ -99,10 +99,10 @@ const clickhouseDataFormatter = new ClickHouseFormatter('US/Eastern', 'YYYY-MM-D
 const questDataFormatter = new QuestFormatter('US/Eastern', 'YYYY-MM-DDTHH:mm:ss.000000Z')
 
 
-const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'TIMESCALE_stocks_data.csv')
+const outputDataFilePath = path.join(__dirname, '..', '..', 'data', 'MACHBASE_stocks_data.csv')
 
 
-// Timescale 
+// Timescale | Machbase?
 const dataWriter = new DataWriter(outputDataFilePath, csvHeader)
 
 // ClickHouse | QuestDB
@@ -110,7 +110,7 @@ const nodeDataWriter = new NodeDataWriter(outputDataFilePath, csvHeader)
 
 
 
-const dataComposer = new DataComposer(timescaleDataFormatter, dataWriter, DATA_MULTIPLIER)
+const dataComposer = new DataComposer(machbaseDataFormatter, dataWriter, DATA_MULTIPLIER)
 
-main(30_000_000, dataComposer)
+main(100_000_000, dataComposer)
 

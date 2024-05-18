@@ -21,7 +21,7 @@ class MachbaseFormatter {
     composeRecord(id, epoch, low, high, volume) {
         return {
             id,
-            ts: epoch * 1000000000,
+            ts: epoch,
             value: this.__getRandomFloat(low, high),
             volume
         }

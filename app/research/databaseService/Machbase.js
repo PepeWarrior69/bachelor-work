@@ -11,6 +11,7 @@ require('dotenv').config()
 
 class Machbase extends DatabaseService {
     // https://docs.machbase.com/neo/api-http/http-js/
+    // https://docs.machbase.com/neo/api-http/write/
     constructor() {
         super()
     }
@@ -52,12 +53,10 @@ class Machbase extends DatabaseService {
         const payload = {
             data: {
                 columns: [ 'stock_id', 'ts', 'value', 'volume' ],
-                rows: data.map(el => ([ el.stock_id, el.ts, el.value, el.volume ]))
+                rows: data.map(el => ([ `${el.stock_id}`, el.ts, el.value, el.volume ]))
             },
             date_format: 's'
         }
-
-        console.log('payload = ', payload.data);
 
         console.time('query_execution_time')
         const res = await fetch(`http://${process.env.DB_HOST}:${process.env.MACHBASE_PORT}/db/write/stock_data?timeformat=s&method=insert`, {

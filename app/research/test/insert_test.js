@@ -21,8 +21,8 @@ const main = async (db, srcFolder, payloadNumber) => {
 
 
 const influx = new InfluxDB()
-const machbase = new Machbase()
 
+const machbase = new Machbase()
 const clickHouse = new ClickHouse()
 const quest = new QuestDB()
 const timescale = new TimescaleDB()
@@ -30,4 +30,4 @@ const timescale = new TimescaleDB()
 const SOURCE_FOLDER = 'insert_10000_payload'
 const PAYLOAD_NUMBER = 1
 
-main(timescale, SOURCE_FOLDER, PAYLOAD_NUMBER)
+main(machbase, SOURCE_FOLDER, PAYLOAD_NUMBER)
