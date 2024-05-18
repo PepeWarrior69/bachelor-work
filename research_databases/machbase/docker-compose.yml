@@ -5,7 +5,7 @@ services:
     image: machbase/machbase-neo
     restart: always
     ports:
-      - "5435:5654"
+      - "5654:5654"
       - "5656:5656"
     volumes:
       - /database/machbase/data:/data
