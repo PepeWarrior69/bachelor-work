@@ -9,7 +9,7 @@ services:
     image: prom/node-exporter:latest 
     container_name: node-exporter 
     restart: unless-stopped 
-    cpuset: "4-5"
+    cpuset: "3"
     volumes: 
       - /proc:/host/proc:ro 
       - /sys:/host/sys:ro 
@@ -31,7 +31,7 @@ services:
       - PGID=1001 
     container_name: prometheus 
     restart: unless-stopped 
-    cpuset: "4-5"
+    cpuset: "3"
     volumes: 
       - /bachelor-work/container_performance_monitoring/promgrafnode/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml 
       - /bachelor-work/container_performance_monitoring/promgrafnode/prometheus:/prometheus 
@@ -52,7 +52,7 @@ services:
     ports: 
       - 5435:3000 
     restart: unless-stopped 
-    cpuset: "4-5"
+    cpuset: "3"
     volumes: 
       - /bachelor-work/container_performance_monitoring/promgrafnode/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources 
       - /bachelor-work/container_performance_monitoring/promgrafnode/grafana:/var/lib/grafana 
@@ -61,7 +61,7 @@ services:
   cadvisor: 
     image: gcr.io/cadvisor/cadvisor:latest 
     container_name: cadvisor 
-    cpuset: "4-5"
+    cpuset: "3"
     ports: 
       - 8080:8080 
     networks: 
@@ -76,7 +76,7 @@ services:
   redis: 
     image: redis:latest 
     container_name: redis 
-    cpuset: "4-5"
+    cpuset: "3"
     ports: 
       - 6379:6379 
     networks: 
