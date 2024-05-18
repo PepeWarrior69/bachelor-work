@@ -14,10 +14,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
     blkio_config:
       device_read_iops:
-        - path: /dev/sda
+        - path: /dev/vda1
           rate: 1000
       device_write_iops:
-        - path: /dev/sda
+        - path: /dev/vda1
           rate: 1000
     cpuset: "0,1,2,3"
     deploy:
