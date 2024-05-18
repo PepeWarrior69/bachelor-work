@@ -12,13 +12,6 @@ services:
       - /database/questdb/data:/var/lib/questdb
       - /database/questdb/metrics:/var/lib/questdb/metrics
       - /etc/localtime:/etc/localtime:ro
-    blkio_config:
-      device_read_iops:
-        - path: /dev/sda
-          rate: 1000
-      device_write_iops:
-        - path: /dev/sda
-          rate: 1000
     cpuset: "0,1,2,3"
     deploy:
       resources:

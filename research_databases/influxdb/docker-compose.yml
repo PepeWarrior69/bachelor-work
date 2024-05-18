@@ -17,13 +17,6 @@ services:
       - /database/influxdb2/data:/var/lib/influxdb2:rw
       - /database/influxdb2/metrics:/var/lib/influxdb2/metrics
       - /etc/localtime:/etc/localtime:ro
-    blkio_config:
-      device_read_iops:
-        - path: /dev/sda
-          rate: 1000
-      device_write_iops:
-        - path: /dev/sda
-          rate: 1000
     cpuset: "0,1,2,3"
     deploy:
       resources:

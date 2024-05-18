@@ -17,13 +17,6 @@ services:
       - /database/clickhouse/data:/var/lib/clickhouse/
       - /database/clickhouse/metrics:/var/lib/clickhouse/metrics
       - /etc/localtime:/etc/localtime:ro
-    blkio_config:
-      device_read_iops:
-        - path: /dev/sda
-          rate: 1000
-      device_write_iops:
-        - path: /dev/sda
-          rate: 1000
     cpuset: "0,1,2,3"
     deploy:
       resources:
