@@ -66,7 +66,7 @@ class ClickHouse extends DatabaseService {
                 stock_id,
                 count(*) as records_count
             from stock_data
-            where ts between toDate('${from}') and toDate('${to}')
+            where ts >= '${from}' and ts <= '${to}'
             group by stock_id
             order by records_count desc
         `
