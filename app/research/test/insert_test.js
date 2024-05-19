@@ -27,7 +27,7 @@ const clickHouse = new ClickHouse()
 const quest = new QuestDB()
 const timescale = new TimescaleDB()
 
-const SOURCE_FOLDER = 'insert_1000_payload'
-const PAYLOAD_NUMBER = 1
+const SOURCE_FOLDER = 'insert_100000_payload'
+const PAYLOAD_NUMBER = 5
 
-main(timescale, SOURCE_FOLDER, PAYLOAD_NUMBER)
+main(machbase, SOURCE_FOLDER, PAYLOAD_NUMBER)

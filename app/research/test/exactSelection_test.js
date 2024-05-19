@@ -7,7 +7,7 @@ const TimescaleDB = require("../databaseService/TimescaleDB")
 
 
 const main = async (db) => {
-    await db.selectionWithAggregation()
+    await db.exactSelectionById(1)
 }
 
 

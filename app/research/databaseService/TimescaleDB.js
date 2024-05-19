@@ -50,6 +50,34 @@ class TimescaleDB extends DatabaseService {
         await this.execute(query)
     }
 
+    async exactSelectionById(id) {
+        const query = `
+            select 
+                count(*) as records_count
+            from stock_data
+            where stock_id = ${id}
+        `
+
+        const res = await this.execute(query)
+
+        console.log('Timescale response = ', res.rows)
+    }
+
+    async timeRangeSelection(from, to) {
+        const query = `
+            select 
+                stock_id,
+                count(*) as records_count
+            from stock_data
+            where ts between '${from}' and '${to}'
+            group by stock_id
+            order by records_count desc
+        `
+
+        const res = await this.execute(query)
+
+        console.log('Timescale response = ', res.rows)
+    }
 
     async selectionWithAggregation() {
         const query = `

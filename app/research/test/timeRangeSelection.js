@@ -7,7 +7,7 @@ const TimescaleDB = require("../databaseService/TimescaleDB")
 
 
 const main = async (db) => {
-    await db.selectionWithAggregation()
+    await db.timeRangeSelection('2019-01-05', '2020-10-05')
 }
 
 

@@ -49,6 +49,43 @@ class QuestDB extends DatabaseService {
         await this.execute()
     }
 
+    async exec_selection(query) {
+        const url = `http://${process.env.DB_HOST}:${process.env.QUEST_PORT}/exec?query=${encodeURIComponent(query)}`
+
+        console.time('query_execution_time')
+        const response = await fetch(url)
+        console.timeEnd('query_execution_time')
+
+        const res = await response.json()
+
+        console.log('QuestDB response = ', res);
+    }
+
+    async exactSelectionById(id) {
+        const query = `
+            select 
+                count(*) as records_count
+            from stock_data
+            where stock_id = ${id}
+        `
+
+        await this.exec_selection(query)
+    }
+
+    async timeRangeSelection(from, to) {
+        const query = `
+            select 
+                stock_id,
+                count(*) as records_count
+            from stock_data
+            where ts between '${from}' and '${to}'
+            group by stock_id
+            order by records_count desc
+        `
+
+        await this.exec_selection(query)
+    }
+
     async selectionWithAggregation() {
         const query = `
             select 
@@ -62,15 +99,7 @@ class QuestDB extends DatabaseService {
             order by stock_id asc
         `
 
-        const url = `http://${process.env.DB_HOST}:${process.env.QUEST_PORT}/exec?query=${encodeURIComponent(query)}`
-
-        console.time('query_execution_time')
-        const response = await fetch(url)
-        console.timeEnd('query_execution_time')
-
-        const res = await response.json()
-
-        console.log('QuestDB response = ', res);
+        await this.exec_selection(query)
     }
 }
 

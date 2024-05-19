@@ -40,6 +40,48 @@ class ClickHouse extends DatabaseService {
         console.log("Inser response from ClickHouse: ", res)
     }
 
+    async exactSelectionById(id) {
+        const query = `
+            select 
+                count(*) as records_count
+            from stock_data
+            where stock_id = ${id}
+        `
+
+        console.time('query_execution_time')
+        const resultSet = await this.__client.query({
+            query,
+            format: 'JSONEachRow'
+        })
+        console.timeEnd('query_execution_time')
+
+        const result = await resultSet.json()
+
+        console.log("ClickHouse dataset result = ", result)
+    }
+
+    async timeRangeSelection(from, to) {
+        const query = `
+            select 
+                stock_id,
+                count(*) as records_count
+            from stock_data
+            where ts between toDate('${from}') and toDate('${to}')
+            group by stock_id
+            order by records_count desc
+        `
+
+        console.time('query_execution_time')
+        const resultSet = await this.__client.query({
+            query,
+            format: 'JSONEachRow'
+        })
+        console.timeEnd('query_execution_time')
+
+        const result = await resultSet.json()
+
+        console.log("ClickHouse dataset result = ", result)
+    }
 
     async selectionWithAggregation() {
         const query = `
@@ -63,7 +105,7 @@ class ClickHouse extends DatabaseService {
 
         const result = await resultSet.json()
 
-        console.log("ClickHouse dataset result = ", result);
+        console.log("ClickHouse dataset result = ", result)
     }
 }
 
