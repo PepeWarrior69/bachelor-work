@@ -23,3 +23,6 @@ Save "top" utility output to a file:
 
 
 // Monitoring system setup: https://medium.com/@sohammohite/docker-container-monitoring-with-cadvisor-prometheus-and-grafana-using-docker-compose-b47ec78efbc
+
+
+docker stats timescaledb_timescaledb_1 --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemPerc}}\t{{.MemUsage}}\t{{.BlockIO}}" >> ./insert_1000/docker_stats_1.txt

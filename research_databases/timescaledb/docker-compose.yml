@@ -12,7 +12,6 @@ services:
       - POSTGRES_DB=stock_db
     volumes:
       - /database/timescaledb/data:/var/lib/postgresql/data
-      - /database/timescaledb/config/postgresql.conf:/usr/local/var/postgres/postgresql.conf
       - /database/timescaledb/metrics:/var/lib/postgresql/metrics
       - /etc/localtime:/etc/localtime:ro
     cpuset: "0,1,2,3"
