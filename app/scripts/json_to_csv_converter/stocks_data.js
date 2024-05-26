@@ -1,18 +1,17 @@
-const fs = require('fs')
 const path = require('path')
 
 const { getDirectoryFiles, getJSONFileData } = require('../utils/file.utils')
 
 const DataComposer = require('./DataComposer')
 const DataWriter = require('./writers/DataWriter')
+const NodeDataWriter = require('./writers/NodeDataWriter')
+const InfluxDataSender = require('./writers/InfluxDataSender')
 
 const TimescaleFormatter = require('./formatter/TimescaleFormatter')
 const MachbaseFormatter = require('./formatter/MachbaseFormatter')
 const ClickHouseFormatter = require('./formatter/ClickHouseFormatter')
 const QuestFormatter = require('./formatter/QuestFormatter')
-const NodeDataWriter = require('./writers/NodeDataWriter')
 const InfluxFormatter = require('./formatter/InfluxFormatter')
-const InfluxDataSender = require('./writers/InfluxDataSender')
 
 
 
